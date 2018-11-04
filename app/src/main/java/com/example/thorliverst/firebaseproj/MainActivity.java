@@ -1,6 +1,7 @@
 package com.example.thorliverst.firebaseproj;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,62 +17,41 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
-
-    private FirebaseAuth firebaseAuth;
-
-    private EditText username;
-    private EditText password;
-
-    private ProgressDialog progressDialog;
+    private Button button1;
+    private Button button2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        firebaseAuth = FirebaseAuth.getInstance();
-        username = findViewById(R.id.username);
-        password = findViewById(R.id.password);
+        button1= findViewById(R.id.btn_signup);
+        button1.setOnClickListener(new View.OnClickListener(){
 
-        Button signupb = findViewById(R.id.signup);
-        progressDialog = new ProgressDialog(this);
-
-        signupb.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                registerUser();
+            public void onClick(View view) {
+                sign_up();
             }
         });
+
+        button2= findViewById(R.id.btn_signin);
+        button2.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                sign_in();
+            }
+        });
+
+    }
+    public void sign_up(){
+        Intent intent = new Intent(this, SignupActivity.class);
+        startActivities(new Intent[]{intent});
     }
 
-    private void registerUser() {
-
-        String user = username.getText().toString().trim();
-        String pass = password.getText().toString().trim();
-
-        if (TextUtils.isEmpty(user)){
-            Toast.makeText(this,"Plase enter your email", Toast.LENGTH_LONG).show();
-            return;
-        }
-        if (TextUtils.isEmpty(pass)){
-            Toast.makeText(this,"Plase enter your password", Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        progressDialog.setMessage("Registering Please wait...");
-        progressDialog.show();
-
-        firebaseAuth.createUserWithEmailAndPassword(user, pass)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()){
-                            Toast.makeText(MainActivity.this,"Successfully registered",Toast.LENGTH_LONG).show();
-                        }else{
-                            Toast.makeText(MainActivity.this,"Registration Error",Toast.LENGTH_LONG).show();
-                        }
-                        progressDialog.dismiss();
-                    }
-                });
+    public void sign_in(){
+        Intent intent = new Intent(this, SigninActivity.class);
+        startActivities(new Intent[]{intent});
     }
+
 }
